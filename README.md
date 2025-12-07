@@ -203,13 +203,3 @@ You can extend it to support:
 * Automatically generating issues from templates
 * Automated certificate pipelines
 
-If you want, I can generate:
-
-* A `Makefile` wrapper
-* A CLI wrapper (`jira-cli`)
-* A GitHub Actions automation workflow
-* A version that signs PDF certificates before upload
-
----
-
-If you'd like a **Confluence-friendly version**, **GitHub stylized version**, or a **CLI installer script**, I can generate those next.
