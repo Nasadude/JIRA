@@ -132,6 +132,7 @@ Use `update_jira.py` to update status, comments, labels, points, and more.
 
 ```bash
 python3 update_jira.py --rtm updates.json
+./update_jira.py --rtm updates.json
 ```
 
 ---
