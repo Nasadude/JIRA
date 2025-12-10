@@ -131,7 +131,7 @@ Use `update_jira.py` to update status, comments, labels, points, and more.
 ### Run:
 
 ```bash
-python3 update_jira.py --rtm updates.json
+
 ./update_jira.py --rtm updates.json
 ```
 
@@ -171,7 +171,7 @@ Certificate directory:
 ### Run:
 
 ```bash
-python3 update_jira.py --rtm upload_files.json
+./update_jira.py --rtm jira_updates.json
 ```
 
 ---

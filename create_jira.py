@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # ============================================================
-#   JIRA CREATION SCRIPT — CERTIFICATES FOR OISS PHASE 1
-#   Creates Feature issues under existing Epics (CPG-7..14)
-#   Compatible with team-managed Jira project CPG
+#   JIRA CREATION SCRIPT — TEAM-MANAGED COMPATIBLE
+#   Creates Task issues under Epics (CPG-7..15)
+#   Project: CPG (projectId = 10033)
 # ============================================================
 
 import os
@@ -22,12 +22,13 @@ if not API_TOKEN:
 AUTH = (JIRA_EMAIL, API_TOKEN)
 HEADERS = {"Accept": "application/json", "Content-Type": "application/json"}
 
-# Allowed issue type for certificates
-ISSUE_TYPE_ID = "10003"  # Feature
+# === TEAM-MANAGED ISSUE TYPE (Task) ===
+ISSUE_TYPE_ID = "10003"    # FEATURE– team-managed parent-compatible
+
 
 
 # -------------------------------------------------------------
-# Create a Jira issue
+# Create a Jira Task under an Epic
 # -------------------------------------------------------------
 def create_issue(epic_key, summary, description, labels):
     url = f"{JIRA_DOMAIN}/rest/api/3/issue"
@@ -37,7 +38,6 @@ def create_issue(epic_key, summary, description, labels):
             "project": {"key": "CPG"},
             "summary": summary,
 
-            # Atlassian Document Format
             "description": {
                 "type": "doc",
                 "version": 1,
@@ -52,7 +52,10 @@ def create_issue(epic_key, summary, description, labels):
             },
 
             "issuetype": {"id": ISSUE_TYPE_ID},
+
+            # Team-managed: parent MUST be epic_key
             "parent": {"key": epic_key},
+
             "labels": labels
         }
     }
@@ -64,14 +67,15 @@ def create_issue(epic_key, summary, description, labels):
         print(f"[CREATED] {issue_key} → {summary}")
         return issue_key
 
-    print(f"[ERROR] Issue creation failed for {epic_key}: {response.status_code} → {response.text}")
+    print(f"[ERROR] Epic {epic_key} failed: {response.status_code} → {response.text}")
     return None
 
+
 # -------------------------------------------------------------
-# Process JSON certificate definitions
+# Process JSON definitions (certificate or Phase 1 items)
 # -------------------------------------------------------------
 def process_json(path):
-    print(f"\n=== Creating Certificate Issues From {path} ===")
+    print(f"\n=== Creating Issues From {path} ===")
 
     with open(path, "r") as f:
         items = json.load(f)
@@ -87,10 +91,10 @@ def process_json(path):
             labels = entry.get("labels", [])
 
         except KeyError as e:
-            print(f"[SKIP] Missing field in entry: {e}")
+            print(f"[SKIP] Missing field: {e}")
             continue
 
-        print(f"\nCreating for Epic {epic_key} → {summary}")
+        print(f"\nCreating → {epic_key} :: {summary}")
 
         issue_key = create_issue(epic_key, summary, description, labels)
 
@@ -98,18 +102,17 @@ def process_json(path):
             update_entries.append({
                 "issue": issue_key,
                 "status": "To Do",
-                "comment": f"RTM {rtm} certificate created.",
+                "comment": f"{rtm} created (auto-generated).",
                 "labels": labels,
                 "points": 0
             })
 
-    # Write JSON for update_jira.py
     update_file = os.path.splitext(path)[0] + "_update.json"
     with open(update_file, "w") as f:
         json.dump(update_entries, f, indent=2)
 
     print("\n=== DONE ===")
-    print(f"Created {len(update_entries)} Jira certificate issues")
+    print(f"Issues created: {len(update_entries)}")
     print(f"Update file saved: {update_file}")
 
 
@@ -117,9 +120,8 @@ def process_json(path):
 # CLI
 # -------------------------------------------------------------
 def main():
-    parser = argparse.ArgumentParser(description="Create Jira certificate issues.")
-    parser.add_argument("--file", required=True, help="JSON file defining certificate issues")
-
+    parser = argparse.ArgumentParser(description="Create Jira Task issues under Epics.")
+    parser.add_argument("--file", required=True, help="JSON file defining issues")
     args = parser.parse_args()
     process_json(args.file)
 
