@@ -1,0 +1,14 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.13.9, pytest-9.0.1, pluggy-1.6.0 -- /Users/michaelritchson/Desktop/Development/INNATE-IMMUNE-SURVEILLANCE-SYSTEM/innate_immune_surveillance/bin/python3.13
+cachedir: .pytest_cache
+rootdir: /Users/michaelritchson/Desktop/Development/INNATE-IMMUNE-SURVEILLANCE-SYSTEM
+configfile: pytest.ini
+plugins: anyio-4.12.0
+collecting ... collected 4 items
+
+tests/test_dan_anomaly.py::test_anomaly_dan_end_to_end_debug PASSED      [ 25%]
+tests/test_dan_conjunction.py::test_dan_conjunction_certificate_cryptography PASSED [ 50%]
+tests/test_dan_maneuver.py::test_maneuver_dan_end_to_end PASSED          [ 75%]
+tests/test_dan_thermal.py::test_thermal_dan_end_to_end PASSED            [100%]
+
+============================== 4 passed in 1.20s ===============================
